@@ -16,7 +16,7 @@ with open(file_name, 'r') as file:
         rounds = game_str[1].split(';')
         
         game_ID = int(re.findall(r'\d+', game_str[0])[0])
-        valid_game = True
+        cur_max = {}
         
         for round_str in rounds:
             for draw in round_str.split(','):
@@ -24,13 +24,12 @@ with open(file_name, 'r') as file:
                 cube_cnt = int(cube[0])
                 cube_col = cube[1]
                 
-                if cube_col not in max_vals or cube_cnt > max_vals[cube_col]:
-                    print("'", cube_col , "' '", cube_cnt, "'")
-                    valid_game = False
-                    break
+                cur_max[cube_col] = max(cur_max.get(cube_col, 0), cube_cnt)
         
-        if valid_game:
-            games_sum = games_sum + game_ID
+        cur_power = 1
+        for col, cnt in cur_max.items():
+            cur_power = cur_power * cnt
+        games_sum = games_sum + cur_power
     
     print(games_sum)
         
